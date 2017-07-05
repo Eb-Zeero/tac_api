@@ -209,6 +209,5 @@ def status():
 
 def setup():
     install_requirements()
-    commit_and_push()
     configure_nginx()
     configure_git()
