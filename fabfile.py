@@ -3,7 +3,7 @@
 ###############
 
 import os
-from fabric.api import cd, env, lcd, put, prompt, local, sudo
+from fabric.api import cd, env, lcd, put, prompt, local, sudo, run
 from fabric.contrib.files import exists
 import time
 
@@ -66,13 +66,13 @@ def install_requirements():
     sudo('sudo pip3 install virtualenv')
     commit_and_push()
     if exists(remote_app_dir + '/tac_api') is False:
-        sudo("git clone https://github.com/Eb-Zeero/tac_api.git")
+        run("git clone https://github.com/Eb-Zeero/tac_api.git")
         print("\n\n\n !!!!!!!!!!repo cloned!!!!!!!!!!!!!!\n\n\n")
 
     with cd(remote_app_dir + '/tac_api'):
-        sudo('virtualenv tac_env')
-        sudo('source tac_env/bin/activate')
-        sudo('pip install -r requirements.txt')
+        run('virtualenv tac_env')
+        run('source tac_env/bin/activate')
+        run('pip install -r requirements.txt')
 
 '''
 def install_flask():
