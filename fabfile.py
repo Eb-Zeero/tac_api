@@ -16,7 +16,7 @@ local_app_dir = './tac_api'
 local_config_dir = './config'
 
 remote_app_dir = '/home/tacapi'
-remote_git_dir = '/home/git'
+remote_git_dir = '/home/tacapi/git'
 remote_flask_dir = remote_app_dir + '/tac_api'
 remote_nginx_dir = '/etc/nginx/sites-enabled'
 remote_supervisor_dir = '/etc/supervisor/conf.d'
@@ -71,9 +71,9 @@ def install_flask():
         with cd(remote_app_dir):
             sudo('virtualenv tac_env')
             sudo('source tac_env/bin/activate')
-            sudo('pip3 install -r requirements.txt')
-        #with cd(remote_flask_dir):
-        #    put('*', './tacapi', use_sudo=True)
+            sudo('pip3 install Flask==0.12.2')
+        with cd(remote_flask_dir):
+            put('*', './', use_sudo=True)
 
 
 def configure_nginx():
@@ -93,7 +93,7 @@ def configure_nginx():
              ' /etc/nginx/sites-enabled/tac_api')
     with lcd(local_config_dir):
         with cd(remote_nginx_dir):
-            put('./tacapi', './', use_sudo=True)
+            put('./tac_api', './', use_sudo=True)
     sudo('/etc/init.d/nginx restart')
 
 
@@ -165,7 +165,7 @@ def status():
 
 def setup():
     install_requirements()
-    configure_git()
     install_flask()
     configure_nginx()
     configure_supervisor()
+    configure_git()

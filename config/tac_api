@@ -5,6 +5,6 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
     }
     location /static {
-        alias  /home/tacapi/tac-api/static/;
+        alias  /home/tacapi/tac_api/static/;
     }
 }
