@@ -1,10 +1,9 @@
 server {
+    listen 80;
+    server_name server_domain_or_IP;
+
     location / {
-        proxy_pass http://localhost:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-    location /static {
-        alias  /home/tacapi/tac_api/static/;
+        include uwsgi_params;
+        uwsgi_pass unix:/home/tacapi/tac_api/tac_api.sock;
     }
 }

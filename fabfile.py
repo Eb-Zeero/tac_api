@@ -12,16 +12,16 @@ import time
 ### config ###
 ##############
 
-local_app_dir = './tac_api'
+local_app_dir = './'
 local_config_dir = './config'
 
 remote_app_dir = '/home/tacapi'
 remote_git_dir = '/home/tacapi/git'
-remote_flask_dir = remote_app_dir + '/tac_api'
+remote_flask_dir = remote_app_dir
 remote_nginx_dir = '/etc/nginx/sites-enabled'
-remote_supervisor_dir = '/etc/supervisor/conf.d'
+# remote_supervisor_dir = '/etc/supervisor/conf.d'
 git_repository = 'git@github.com:Eb-Zeero/tac_api.git'
-timestamp = 'release_{date}'.format(date=int(time.time()*1000))
+# timestamp = 'release_{date}'.format(date=int(time.time()*1000))
 
 env.user_ssh_config = True
 env.hosts = ['{host}'.format(host=os.environ["TAC_API_HOST"])]
@@ -33,18 +33,25 @@ env.password = '{password}'.format(password=os.environ["TAC_API_HOST_PASSWORD"])
 ### tasks ###
 #############
 
+def commit_and_push():
+    with lcd(local_app_dir):
+        local('git add -A')
+        commit_message = prompt("Commit message?")
+        local('git commit -am "{0}"'.format(commit_message))
+        local('git push')
+
+
 def install_requirements():
     """ Install required packages. """
     # Python3
     sudo('apt-get update')
     sudo('apt-get install -y python3')
     sudo('apt-get install -y python3-pip')
-    sudo('apt-get install -y python3-all-dev')
-    sudo('apt-get install -y python-virtualenv')
+    sudo('apt-get install -y python3-dev')
+    # sudo('apt-get install -y python3-virtualenv')
 
     # Web Server
     sudo('apt-get install -y nginx')
-    sudo('apt-get install -y gunicorn')
 
     # Supervisor
     sudo('apt-get install -y supervisor')
@@ -56,7 +63,17 @@ def install_requirements():
     sudo('apt-get install -y mysql-client')
     sudo('apt-get install -y libmysqlclient-dev')
 
+    sudo('sudo pip3 install virtualenv')
+    commit_and_push()
+    if exists(remote_app_dir + '/tac_api') is False:
+        sudo("git clone https://github.com/Eb-Zeero/tac_api.git")
 
+    with cd(remote_app_dir + '/tac_api'):
+        sudo('virtualenv tac_env')
+        sudo('source tac_env/bin/activate')
+        sudo('pip install -r requirements.txt')
+
+'''
 def install_flask():
     """
     1. Create project directories
@@ -69,12 +86,14 @@ def install_flask():
         sudo('mkdir ' + remote_flask_dir)
     with lcd(local_app_dir):
         with cd(remote_app_dir):
-            sudo('virtualenv tac_env')
+            sudo('pip install --upgrade virtualenv')
+            sudo('virtualenv -p python3 tac_env')
             sudo('source tac_env/bin/activate')
-            sudo('pip3 install Flask==0.12.2')
+            sudo('pip install Flask==0.12.2')
+            sudo('pip install uwsgi')
         with cd(remote_flask_dir):
             put('*', './', use_sudo=True)
-
+'''
 
 def configure_nginx():
     """
@@ -90,13 +109,28 @@ def configure_nginx():
     if exists('/etc/nginx/sites-enabled/tac_api') is False:
         sudo('touch /etc/nginx/sites-available/tac_api')
         sudo('ln -s /etc/nginx/sites-available/tac_api' +
-             ' /etc/nginx/sites-enabled/tac_api')
+             ' /etc/nginx/sites-enabled')
     with lcd(local_config_dir):
         with cd(remote_nginx_dir):
             put('./tac_api', './', use_sudo=True)
     sudo('/etc/init.d/nginx restart')
 
+    # Seen /etc/systemd/system/tac_api.service I created it manually
 
+    sudo('systemctl start tac_api')
+    sudo('systemctl enable tac_api')
+
+    # test Nginx
+    print("\n\n\n!!!!!!!!!!!! Testing Nginx !!!!!!!!!!!!!!!\n\n\n")
+    sudo('nginx -t')
+    print("\n\n\n!!!!!!!!!!!! Restarting Nginx !!!!!!!!!!!!!!!\n\n\n")
+    sudo('systemctl restart nginx')
+    sudo('ufw delete allow 5000')
+    sudo("sudo ufw allow 'Nginx Full'")
+
+
+
+'''
 def configure_supervisor():
     """
     1. Create new supervisor config file
@@ -104,11 +138,14 @@ def configure_supervisor():
     3. Register new command
     """
     if exists('/etc/supervisor/conf.d/tac_api.conf') is False:
+    if exists('/etc/systemd/system/tac_api.service') is False:
         with lcd(local_config_dir):
             with cd(remote_supervisor_dir):
                 put('./tac_api.conf', './', use_sudo=True)
                 sudo('supervisorctl reread')
                 sudo('supervisorctl update')
+
+'''
 
 
 def configure_git():
@@ -146,6 +183,12 @@ def deploy():
         local('git push')
         sudo('supervisorctl restart tac_api')
 
+def commit_and_push():
+    with lcd(local_app_dir):
+        local('git add -A')
+        commit_message = prompt("Commit message?")
+        local('git commit -am "{0}"'.format(commit_message))
+        local('git push')
 
 def rollback():
     """
@@ -165,7 +208,6 @@ def status():
 
 def setup():
     install_requirements()
-    install_flask()
+    commit_and_push()
     configure_nginx()
-    configure_supervisor()
     configure_git()

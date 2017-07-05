@@ -1,12 +1,12 @@
-from flask import Flask, jsonify, request, make_response
+from flask import jsonify, request, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
 from points.proposals.proposals_per_partner import partner_proposal
 import datetime
 from points.user import User, token_required
+from alchemy.config import app
 
-app = Flask(__name__)
 
 languages = [{'name': 'JavaScripts'},
              {'name': 'Python'},
