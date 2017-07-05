@@ -1,9 +1,9 @@
-from tac_api.app.alchemy.config import db
+from alchemy.config import db
 from flask import request, jsonify
 import jwt
 from functools import wraps
 
-from tac_api.app.alchemy.config import app
+from alchemy.config import app
 
 
 def token_required(f):

@@ -1,5 +1,5 @@
 import pandas as pd
-from tac_api.app.alchemy.config import db
+from alchemy.config import db
 
 
 def partner_proposal(partner):
@@ -28,5 +28,5 @@ def partner_proposal(partner):
     return proposals
 
 
-class proposal_per_partner(db.module):
-    __tablename__ = "name"
+#class proposal_per_partner(db.Module):
+#    __tablename__ = "name"

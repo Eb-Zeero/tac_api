@@ -2,9 +2,9 @@ from flask import Flask, jsonify, request, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 
-from tac_api.app.points.proposals.proposals_per_partner import partner_proposal
+from points.proposals.proposals_per_partner import partner_proposal
 import datetime
-from tac_api.app.points.user import User, token_required
+from points.user import User, token_required
 
 app = Flask(__name__)
 
@@ -87,4 +87,4 @@ def login():
     return make_response('Could not verify user! ', 401, {'WWW-Authenticate': 'Basic realm="Login required'})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=3001)
+    app.run(debug=True)
