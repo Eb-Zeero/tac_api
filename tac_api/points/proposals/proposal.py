@@ -1,4 +1,4 @@
-from alchemy.config import db
+from tac_api.alchemy.config import db
 
 
 class Proposal(db.Model):

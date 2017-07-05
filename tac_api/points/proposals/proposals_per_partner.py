@@ -1,5 +1,5 @@
 import pandas as pd
-from alchemy.config import db
+# from tac_api.alchemy.config import db
 
 
 def partner_proposal(partner):
