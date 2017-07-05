@@ -143,7 +143,7 @@ def deploy():
         local('git add -A')
         commit_message = prompt("Commit message?")
         local('git commit -am "{0}"'.format(commit_message))
-        local('git push remote master')
+        local('git push')
         sudo('supervisorctl restart tac_api')
 
 
