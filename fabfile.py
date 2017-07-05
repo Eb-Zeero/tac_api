@@ -67,6 +67,7 @@ def install_requirements():
     commit_and_push()
     if exists(remote_app_dir + '/tac_api') is False:
         sudo("git clone https://github.com/Eb-Zeero/tac_api.git")
+        print("\n\n\n !!!!!!!!!!repo cloned!!!!!!!!!!!!!!\n\n\n")
 
     with cd(remote_app_dir + '/tac_api'):
         sudo('virtualenv tac_env')
