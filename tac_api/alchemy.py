@@ -36,4 +36,5 @@ class Pages(db.Model):
         self.pages = pages
         self.role = role
         self.righs = rights
+        self.pages = " this is new"
 

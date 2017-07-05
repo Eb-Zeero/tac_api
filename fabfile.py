@@ -154,7 +154,7 @@ def rollback():
     """
     with lcd(local_app_dir):
         local('git revert master  --no-edit')
-        local('git push production master')
+        local('git push')
         sudo('supervisorctl restart tac_api')
 
 
