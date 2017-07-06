@@ -1,4 +1,4 @@
-from alchemy.config import db
+from app.alchemy.config import db
 
 
 class Token(db.Model):

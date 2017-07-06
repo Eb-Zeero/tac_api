@@ -2,7 +2,7 @@ from flask import request, jsonify
 import jwt
 from functools import wraps
 
-from app import db
+from app.alchemy.config import db
 
 
 def token_required(f):
