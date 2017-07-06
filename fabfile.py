@@ -73,6 +73,9 @@ def install_requirements():
         run('virtualenv tac_env')
         run('source tac_env/bin/activate')
         run('pip install -r requirements.txt')
+        run('pip install -r requirements.txt')
+        run('pip install -r requirements.txt')
+        run('pip install -r requirements.txt')
 
 '''
 def install_flask():

@@ -7,11 +7,7 @@ from points.proposals.proposals_per_partner import partner_proposal
 import datetime
 from points.user import User, token_required
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'thisissecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:men1zeero00@localhost:3306/tac'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db = SQLAlchemy(app)
+from alchemy.config import app, db
 
 
 languages = [{'name': 'JavaScripts'},
