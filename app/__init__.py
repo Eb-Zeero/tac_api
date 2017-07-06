@@ -2,12 +2,19 @@ from flask import Flask, jsonify, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-
-from points.proposals.proposals_per_partner import partner_proposal
 import datetime
-from points.user import User, token_required
 
-from alchemy.config import app, db
+from app.points.proposals.proposals_per_partner import partner_proposal
+from app.points.user import User, token_required
+
+app = Flask(__name__)
+
+app.config.from_object('config')
+
+app.config['SECRET_KEY'] = 'thisissecret'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:men1zeero00@localhost:3306/tac'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db = SQLAlchemy(app)
 
 
 languages = [{'name': 'JavaScripts'},
@@ -60,6 +67,10 @@ def proposals_per_partner(partner):
     print(proposals.keys)
     return jsonify({'proposals': proposals})
 
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"message": "there is no such route(endpoint)"})
 
 @app.route('/statistics', methods=['GET'])
 @token_required
