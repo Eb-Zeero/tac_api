@@ -1,0 +1,13 @@
+*.pyc
+*.DS_Store
+.idea/
+__pycache__/
+db.py
+pytho.py
+tac_venv/
+tryer.py
+alchemy.py
+restful.py
+.env
+app/static/
+app/templates/

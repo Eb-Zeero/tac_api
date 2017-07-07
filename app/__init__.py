@@ -72,10 +72,32 @@ def proposals_per_partner(partner):
 def not_found(error):
     return jsonify({"message": "there is no such route(endpoint)"})
 
+
 @app.route('/statistics', methods=['GET'])
 @token_required
 def statistics_page(current_user):
     # todos = Todo.query.filter_by(user_id=current_user.id).all()
+    dropdown = {
+        'Partner_Name': {},
+        'Semester': {}
+    }
+    proposal_information = {
+        'total_number': {},
+        'new_proposals': {},
+        'resubmitted': {},
+        'new_long_term': {},
+        'total_long_term': {},
+        'time_available': {},
+        'Allocated_time': {},
+        'total_requested_time': {},
+        'over_subscription_rate ': {},
+        'avg_request_per_proposal': {},
+        'no_of_thesis': {},
+        'p4_proposals': {}
+    }
+    plot = {
+        
+    }
     return ''
 
 
